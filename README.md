@@ -9,7 +9,7 @@ un Prefab.
 - Llamadas a debug logs de cada evento llamado, quién lo llamó, y quienes lo recibieron.
 
 --------------------------------------------------------------------------------------------
-Declaraciones de eventos:
+>> Declaraciones de eventos:
 C# Events:
 - OnChangeHP, OnChangeScore, OnDead -> en script PlayerCollision
 - OnDamage, OnHeal -> en script PlayerEvents
