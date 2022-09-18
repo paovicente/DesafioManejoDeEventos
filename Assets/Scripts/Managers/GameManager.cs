@@ -37,7 +37,7 @@ public class GameManager : MonoBehaviour {
 
     private void OnDisable(){
 
-        PlayerCollision.OnChangeHP -= SetScore;
+        PlayerCollision.OnChangeScore -= SetScore;
     }
 
     public static void SetScore(int newValue){

@@ -28,6 +28,7 @@ public class HUDManager : MonoBehaviour {
 
             PlayerCollision.OnDead += GameOver;
             PlayerCollision.OnChangeHP += SetHPBar;
+            GameEvents.OnScore += SetScoreBar;
         }
         else      
             Destroy(gameObject);      
@@ -53,5 +54,6 @@ public class HUDManager : MonoBehaviour {
 
         PlayerCollision.OnDead -= GameOver;
         PlayerCollision.OnChangeHP -= SetHPBar;
+        GameEvents.OnScore -= SetScoreBar;
     }
 }

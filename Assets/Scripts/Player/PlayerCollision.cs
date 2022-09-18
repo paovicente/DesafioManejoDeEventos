@@ -97,17 +97,15 @@ public class PlayerCollision : MonoBehaviour {
             component.FoodList.Add(other.gameObject);   //agrego la comida a la lista
             
             //HEAL
-            //FoodData foodData = other.gameObject.GetComponent<FoodData>();
-            //playerData.Healing(foodData.HealPoints);
+            
             PlayerEvents.OnHealCall(other.gameObject.GetComponent<FoodData>().HealPoints);
             Debug.Log("VIDA LUEGO DE COMER: " + playerData.HP);
-            Debug.Log("HEAL POINTS: " + other.gameObject.GetComponent<FoodData>().HealPoints);
-            //HUDManager.SetHPBar(playerData.HP);
+        
             PlayerCollision.OnChangeHP?.Invoke(playerData.HP);
 
-            GameManager.Score += 200;
             //HUDManager.SetScoreBar(GameManager.Score);
-            PlayerCollision.OnChangeScore?.Invoke(200);
+            GameEvents.OnScoreCall(GameManager.Score);
+            PlayerCollision.OnChangeScore?.Invoke(200);     //se le suma 200 puntos de vida cuando come
 
             Debug.Log("SCORE: " + GameManager.Score);
 
