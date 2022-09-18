@@ -1,0 +1,123 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using System;
+
+public class PlayerCollision : MonoBehaviour {
+
+    [SerializeField] GameObject foodManager;
+
+    [SerializeField] ZombieManager zombieManager;
+
+    private PlayerData playerData;
+    
+    private int countFood = 0;
+
+//----------------- EVENTOS -----------------------
+    public static event Action OnDead;
+    public static event Action<int> OnChangeHP;
+
+    // Start is called before the first frame update
+    void Start(){
+
+        playerData = GetComponent<PlayerData>();
+        PlayerCollision.OnChangeHP?.Invoke(playerData.HP);
+    }
+
+    // Update is called once per frame
+    void Update(){
+        
+        //MANEJAR CASOS DE GAME OVER
+        if (GameManager.GameOver == false){
+
+            VerifyCounter();    //desaparecen las comidas
+
+            if (playerData.HP <= 0){
+                PlayerCollision.OnDead?.Invoke();
+                
+                Debug.Log("GAME OVER -- SIN VIDA");
+                GameManager.GameOver = true;
+            }else if (GameManager.Timer <= 0f){
+                PlayerCollision.OnDead?.Invoke();
+                
+                Debug.Log("GAME OVER -- SIN TIEMPO");
+                GameManager.GameOver = true;
+            }else if (GameManager.Timer <= 20f && GameManager.Score <= 50){
+                PlayerCollision.OnDead?.Invoke();
+                
+                Debug.Log("GAME OVER -- POCO PUNTAJE");
+                GameManager.GameOver = true;
+            }
+        }
+    }
+
+    private void OnCollisionEnter(Collision other) {
+        
+        if (other.gameObject.tag == "cementeryObject"){
+            //DAMAGE
+            //playerData.Damage(other.gameObject.GetComponent<CemeteryObject>().cementeryData.DamagePoints);
+            PlayerEvents.OnDamageCall(other.gameObject.GetComponent<CemeteryData>().DamagePoints);
+            PlayerCollision.OnChangeHP?.Invoke(playerData.HP);
+            Debug.Log("VIDA LUEGO DEL DAÑO: " + playerData.HP);
+
+            //HUDManager.SetHPBar(playerData.HP);           
+        }
+
+        if (other.gameObject.tag == "enemy"){
+
+            if (zombieManager.ZombieDirectory.ContainsKey(other.gameObject.name) == false){
+
+                zombieManager.ZombieDirectory.Add(other.gameObject.name,other.gameObject);
+                Debug.Log("ZOMBIE AGREGADO: " + zombieManager.ZombieDirectory[other.gameObject.name]);
+                
+                //playerData.Damage(500);
+                PlayerEvents.OnDamageCall(other.gameObject.GetComponent<ZombieData>().DamagePoints);
+                PlayerCollision.OnChangeHP?.Invoke(playerData.HP);
+
+                Debug.Log("VIDA LUEGO DEL DAÑO: " + playerData.HP);
+
+                //HUDManager.SetHPBar(playerData.HP);
+            }
+        }
+    }
+
+    private void OnTriggerEnter(Collider other) {
+        
+        if (other.gameObject.tag == "Food"){
+            countFood++;
+
+            FoodManager component = foodManager.GetComponent<FoodManager>();
+            component.EatsFood(other.gameObject);
+
+            component.FoodList.Add(other.gameObject);   //agrego la comida a la lista
+            
+            //HEAL
+            FoodData foodData = other.gameObject.GetComponent<FoodData>();
+            //playerData.Healing(foodData.HealPoints);
+            PlayerEvents.OnHealCall(other.gameObject.GetComponent<FoodData>().HealPoints);
+            Debug.Log("VIDA LUEGO DE COMER: " + playerData.HP);
+
+            //HUDManager.SetHPBar(playerData.HP);
+            PlayerCollision.OnChangeHP?.Invoke(playerData.HP);
+
+            GameManager.Score += 200;
+            HUDManager.SetScoreBar(GameManager.Score);
+            
+            Debug.Log("SCORE: " + GameManager.Score);
+
+            if (GameManager.Timer <= 20f && GameManager.Score <= 50){
+                component.FoodList.Clear();
+                GameManager.GameOver = true;
+            }
+        }
+    }
+
+    private void VerifyCounter(){
+
+        if (countFood == 5){
+            FoodManager component = foodManager.GetComponent<FoodManager>();
+            component.KillFood();
+            countFood = 0;
+        }
+    }
+}
