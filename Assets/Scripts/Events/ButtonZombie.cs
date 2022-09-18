@@ -9,7 +9,8 @@ public class ButtonZombie : MonoBehaviour {
     private void OnTriggerEnter(Collider other){
         if (other.CompareTag("Player")){
             
-            Debug.Log("PLAYER PRESIONANDO EL BOTÓN");
+            Debug.Log("PLAYER PRESIONANDO EL BOTÓN NEW ZOMBIE");
+            Debug.Log("EVENTO LLAMADO POR: " + gameObject.name);
             OnTriggerButtonZombie?.Invoke();
         }
     }

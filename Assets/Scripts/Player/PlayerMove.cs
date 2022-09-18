@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class PlayerMove : MonoBehaviour {
     //---------------------- PROPIEDADES SERIALIZADAS ----------------------
@@ -24,8 +25,16 @@ public class PlayerMove : MonoBehaviour {
     private Rigidbody myRigidbody;
 
     private bool stopPlayer = false;
+
+    public UnityEvent OnTeleportation;
+    
+    private float delay = 20f;
+
+    private float repeatTime = 10f;
+
     void Start(){
         MyRigidbody = GetComponent<Rigidbody>();
+        InvokeRepeating("ChangePosition",delay, repeatTime);
     }
 
     // Update is called once per frame
@@ -75,6 +84,19 @@ public class PlayerMove : MonoBehaviour {
         cameraAxisX += Input.GetAxis("Mouse X");
         Quaternion newRotation = Quaternion.Euler(0, cameraAxisX, 0);
         transform.rotation = Quaternion.Lerp(transform.rotation, newRotation, 2.5f * Time.deltaTime);
+    }
+
+    private void ChangePosition(){
+            
+        Debug.Log("PLAYER TELETRANSPORTANDOSE");
+        Debug.Log("EVENTO LLAMADO POR: " + gameObject.name);
+        OnTeleportation?.Invoke();
+    
+    }
+
+    public void RandomPosition(){
+
+        transform.Translate(Random.Range(-24f,13f),Random.Range(-2f,-1f),Random.Range(-30f,23f));
     }
 
 }
