@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour {
 
-    private static int score = 0;
+    private static int score = 100;
     public static int Score { get => score; set => score = value; }
 
     private static float time = 100f;
@@ -28,7 +28,7 @@ public class GameManager : MonoBehaviour {
             instance = this;
             score = 0;
 
-            PlayerCollision.OnChangeHP += SetScore;
+            PlayerCollision.OnChangeScore += SetScore;
 
             DontDestroyOnLoad(gameObject);
         }else
@@ -43,7 +43,7 @@ public class GameManager : MonoBehaviour {
     public static void SetScore(int newValue){
 
         score += newValue;
-        Debug.Log("DESDE EL Game Manager "+ score);
+        Debug.Log("nuevo valor: " + newValue + "DESDE EL Game Manager "+ score);
     }
 }
 

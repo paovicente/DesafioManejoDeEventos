@@ -17,11 +17,14 @@ public class PlayerCollision : MonoBehaviour {
     public static event Action OnDead;
     public static event Action<int> OnChangeHP;
 
+    public static event Action<int> OnChangeScore;
+
     // Start is called before the first frame update
     void Start(){
 
         playerData = GetComponent<PlayerData>();
         PlayerCollision.OnChangeHP?.Invoke(playerData.HP);
+        PlayerCollision.OnChangeScore?.Invoke(GameManager.Score);
     }
 
     // Update is called once per frame
@@ -98,13 +101,13 @@ public class PlayerCollision : MonoBehaviour {
             //playerData.Healing(foodData.HealPoints);
             PlayerEvents.OnHealCall(other.gameObject.GetComponent<FoodData>().HealPoints);
             Debug.Log("VIDA LUEGO DE COMER: " + playerData.HP);
-
+            Debug.Log("HEAL POINTS: " + other.gameObject.GetComponent<FoodData>().HealPoints);
             //HUDManager.SetHPBar(playerData.HP);
             PlayerCollision.OnChangeHP?.Invoke(playerData.HP);
 
             GameManager.Score += 200;
             //HUDManager.SetScoreBar(GameManager.Score);
-            PlayerCollision.OnChangeHP?.Invoke(GameManager.Score);
+            PlayerCollision.OnChangeScore?.Invoke(200);
 
             Debug.Log("SCORE: " + GameManager.Score);
 
