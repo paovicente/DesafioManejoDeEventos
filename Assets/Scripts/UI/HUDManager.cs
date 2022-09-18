@@ -13,9 +13,11 @@ public class HUDManager : MonoBehaviour {
     [SerializeField] private Slider scoreBar;
     private PlayerData playerData;
 
+    [SerializeField] private GameObject gameOverPanel;
+
     private void Start() {
         playerData= GetComponent<PlayerData>();
-        HUDManager.SetHPBar(playerData.HP);
+        //HUDManager.SetHPBar(playerData.HP);
     }
 
     private void Awake(){
@@ -23,6 +25,9 @@ public class HUDManager : MonoBehaviour {
         if (instance == null){
             instance = this;
             Debug.Log(instance);
+
+            PlayerCollision.OnDead += GameOver;
+            PlayerCollision.OnChangeHP += SetHPBar;
         }
         else      
             Destroy(gameObject);      
@@ -38,4 +43,15 @@ public class HUDManager : MonoBehaviour {
         instance.scoreBar.value = newValue;
     }
 
+    private void GameOver(){
+
+        Debug.Log("RESPUESTA DESDE OTRO SCRIPT");
+        gameOverPanel.SetActive(true);
+    }
+
+    private void OnDisable(){
+
+        PlayerCollision.OnDead -= GameOver;
+        PlayerCollision.OnChangeHP -= SetHPBar;
+    }
 }

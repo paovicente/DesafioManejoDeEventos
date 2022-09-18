@@ -56,7 +56,9 @@ public class PlayerCollision : MonoBehaviour {
         if (other.gameObject.tag == "cementeryObject"){
             //DAMAGE
             //playerData.Damage(other.gameObject.GetComponent<CemeteryObject>().cementeryData.DamagePoints);
-            PlayerEvents.OnDamageCall(other.gameObject.GetComponent<CemeteryData>().DamagePoints);
+            PlayerEvents.OnDamageCall(other.gameObject.GetComponent<CemeteryObject>().cementeryData.DamagePoints);
+            Debug.Log("DAÑO: " + other.gameObject.GetComponent<CemeteryObject>().cementeryData.DamagePoints);
+            
             PlayerCollision.OnChangeHP?.Invoke(playerData.HP);
             Debug.Log("VIDA LUEGO DEL DAÑO: " + playerData.HP);
 
@@ -71,7 +73,7 @@ public class PlayerCollision : MonoBehaviour {
                 Debug.Log("ZOMBIE AGREGADO: " + zombieManager.ZombieDirectory[other.gameObject.name]);
                 
                 //playerData.Damage(500);
-                PlayerEvents.OnDamageCall(other.gameObject.GetComponent<ZombieData>().DamagePoints);
+                PlayerEvents.OnDamageCall(other.gameObject.GetComponent<Zombie>().zombieData.DamagePoints);
                 PlayerCollision.OnChangeHP?.Invoke(playerData.HP);
 
                 Debug.Log("VIDA LUEGO DEL DAÑO: " + playerData.HP);
@@ -92,7 +94,7 @@ public class PlayerCollision : MonoBehaviour {
             component.FoodList.Add(other.gameObject);   //agrego la comida a la lista
             
             //HEAL
-            FoodData foodData = other.gameObject.GetComponent<FoodData>();
+            //FoodData foodData = other.gameObject.GetComponent<FoodData>();
             //playerData.Healing(foodData.HealPoints);
             PlayerEvents.OnHealCall(other.gameObject.GetComponent<FoodData>().HealPoints);
             Debug.Log("VIDA LUEGO DE COMER: " + playerData.HP);
@@ -101,8 +103,9 @@ public class PlayerCollision : MonoBehaviour {
             PlayerCollision.OnChangeHP?.Invoke(playerData.HP);
 
             GameManager.Score += 200;
-            HUDManager.SetScoreBar(GameManager.Score);
-            
+            //HUDManager.SetScoreBar(GameManager.Score);
+            PlayerCollision.OnChangeHP?.Invoke(GameManager.Score);
+
             Debug.Log("SCORE: " + GameManager.Score);
 
             if (GameManager.Timer <= 20f && GameManager.Score <= 50){

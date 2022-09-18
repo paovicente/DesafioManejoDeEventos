@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 71dfe25e77cd2db42a7e58e1c3480f5f, type: 3}
   m_Name: Cementery_Data
   m_EditorClassIdentifier: 
-  damagePoints: 1000
+  damagePoints: 325

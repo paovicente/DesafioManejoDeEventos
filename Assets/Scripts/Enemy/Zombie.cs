@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Zombie : MonoBehaviour {
-    [SerializeField] protected ZombieData zombieData;
+    [SerializeField] public ZombieData zombieData;
 
     [SerializeField] ZombieManager manager;
 

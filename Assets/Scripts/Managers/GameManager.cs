@@ -27,9 +27,23 @@ public class GameManager : MonoBehaviour {
         if (instance == null){   
             instance = this;
             score = 0;
+
+            PlayerCollision.OnChangeHP += SetScore;
+
             DontDestroyOnLoad(gameObject);
         }else
             Destroy(gameObject);     
+    }
+
+    private void OnDisable(){
+
+        PlayerCollision.OnChangeHP -= SetScore;
+    }
+
+    public static void SetScore(int newValue){
+
+        score += newValue;
+        Debug.Log("DESDE EL Game Manager "+ score);
     }
 }
 
